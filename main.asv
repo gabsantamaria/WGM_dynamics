@@ -1,0 +1,53 @@
+close all; pause(0.1); c = 299792458;
+
+lambda0 = 1550e-9; fspan = 2e12; neff = 1.8305; loss = 2.7; R0 = 52.13160512687181e-6;% 51.452e-6;
+[BET, f, Qi, f0, mp, lda0]  = get_beta(lambda0, fspan, neff, loss, R0);
+BET_res_ = BET; BET_coup_ = BET;
+    BET_coup_ = real(BET_coup_);
+
+L = 2*pi*R0; L1_ = L/2; L2_ = L/2; L3_ = 10e-6; L4_ = 10e-6;
+
+r0_ = get_critical_coupling(Qi, mp);
+r0_ = -(r0_^1.02)^0.001;
+r2_ = 0+1*r0_.^250;
+
+ra = sqrt(0.5); rb = -sqrt(0.5); lb = 0*10e-6; la = lb + 0.5*c/((500e9)*neff);
+[r4_, r5_, t4_, t5_] = get_interferometer(ra, get_lossless_t(ra), rb, get_lossless_t(rb), la, lb, BET);
+
+%r4_ = 0; r5_ = 0; t4_ = 0; t5_ = 0;
+r4_ = (r4_);
+[a1234_num, b012345_num] = solveall_simpler(r0_, r2_, r4_, r5_, t4_, t5_, L1_, L2_, L3_, L4_, BET_res_, BET_coup_);
+
+figure; plot((f-f0)*1e-9, abs(r4_));  hold on;
+plot((f-f0)*1e-9, angle(r4_), '--')
+
+figure; semilogy((f-f0)*1e-9, abs(b012345_num(1,:))); hold on;
+%plot((f-f0)*1e-9, abs(b012345_num(2,:)));
+semilogy((f-f0)*1e-9, abs(b012345_num(6,:)));
+semilogy((f-f0)*1e-9, abs(b012345_num(2,:)), '--', 'linewidth', 2);
+semilogy((f-f0)*1e-9, abs(a1234_num(3,:)));
+xlabel('f-f_0'); ylabel('Magnitude of the mode [$$\sqrt{\mathrm{W}}$$]', 'interpreter', 'latex');
+legend('b0', 'b5', 'b1', 'a3');
+%plot((f-f0)*1e-9, abs(b012345_num(6,:)));
+[Qloaded, Dnu_loaded, Wstored, Ploss_abs, Ploss_leak] = calculate_Ql(a1234_num, b012345_num, L1_, L2_, L3_, L4_, neff, r0_, f);
+figure;
+
+semilogy((f-f0)*1e-9,Qloaded); ylabel('Q_l');  yl = ylim; ylim([yl(1), 1.1*Qi]); hold on;
+yline(Qi/2,'b--'); hold on; yline(Qi,'b-.');
+yyaxis right;
+semilogy((f-f0)*1e-9,Dnu_loaded*1e-6); ylabel('$$\Delta\nu_\mathrm{loaded}$$ [MHz]', 'interpreter', 'latex');
+xlabel('f-f_0');
+
+legend('Loaded Q', 'Loaded bandwidth', 'critical coupling loaded Q', 'intrinsic Q');
+
+
+%figure; semilogy((f-f0)*1e-9,Wstored, 'linewidth', 4); 
+%yyaxis right;  semilogy((f-f0)*1e-9,Ploss_abs,'linewidth', 2);  hold on;  semilogy((f-f0)*1e-9,Ploss_leak, 'k--');
+%legend('Wstored', 'Ploss abs', 'Ploss leak')
+
+%figure; semilogy((f-f0)*1e-9,(2*pi*f.*Wstored)./Ploss_abs, 'linewidth', 4); hold on;
+%semilogy((f-f0)*1e-9,(2*pi*f.*Wstored)./Ploss_leak, 'linewidth', 2);
+%legend('Qi', 'Qc')
+
+%energy conservation
+%(33.4744^2)*(1-get_critical_coupling(Qi, mp)^2)+0.39029^2 + 0.00880521^2
