@@ -38,7 +38,7 @@ tb = get_lossless_t(rb);			%Transmission coupling strength of second 50/50 split
 
 
 %Building M-Z asymmetric interferometer
-[r4_, r5_, t4_, t5_] = get_interferometer(ra, ta, rb, tb, la, lb, BET);
+[r4_, r5_, t4_, t5_] = get_interferometer(ra, ta, rb, tb, la, lb, BET_coup_);
 
 %Solving all modes symbolically and then numerically
 [a1234_num, b012345_num] = solveall_simpler(r0_, r2_, r4_, r5_, t4_, t5_, L1_, L2_, L3_, L4_, BET_res_, BET_coup_);

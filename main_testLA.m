@@ -4,8 +4,8 @@ lambda0 = 1550e-9; fspan = 2e12;
 %--------DESIGN PARAMETERS--------------------
 neff_res = 1.8305; 			%effective index of resonator
 neff_coup = 1.8305; 		%effective index of coupler waveguides
-loss_res = 2.7; 			%loss of resonator (dB/m)
-loss_coup = 2.7; 			%loss of coupler waveguides (dB/m)
+loss_res = 9; 			%loss of resonator (dB/m)
+loss_coup = 9; 			%loss of coupler waveguides (dB/m)
 R0 = 52.13160512687181e-6;	%radius of resonator
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -38,7 +38,7 @@ tb = get_lossless_t(rb);			%Transmission coupling strength of second 50/50 split
 
 
 %Building M-Z asymmetric interferometer
-[r4_, r5_, t4_, t5_] = get_interferometer(ra, ta, rb, tb, la, lb, BET);
+[r4_, r5_, t4_, t5_] = get_interferometer(ra, ta, rb, tb, la, lb, BET_coup_);
 
 %Solving all modes symbolically and then numerically
 [a1234_num, b012345_num] = solveall_simpler(r0_, r2_, r4_, r5_, t4_, t5_, L1_, L2_, L3_, L4_, BET_res_, BET_coup_);
