@@ -10,7 +10,7 @@ R0 = 52.13160512687181e-6;	%radius of resonator
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Finding resonance frequency, asigning frequency vector and finding complex betas
-[BET_res_, f, Qi, f0, mp, lda0]  = get_beta(lambda0, fspan, neff_res, loss_res, R0);
+[BET_res_, f, Qi, f0, mp, lda0, FSR]  = get_beta(lambda0, fspan, neff_res, loss_res, R0);
 bet_pp_coup = loss_coup/(20*log10(exp(1))); BET_coup_ = (2*pi*f/c)*neff_coup -1i*bet_pp_coup;
 
 
@@ -31,7 +31,7 @@ r2_ = 0+1*(att_roundtrip.^50);		%Resonator - coupler coupling strength
 ra = sqrt(0.6);						%Coupling strength of first 50/50 splitter of the M-Z interferometer
 rb = -sqrt(0.55); 					%Coupling strength of second 50/50 splitter of the M-Z interferometer
 lb = 0*10e-6; 						%Length of "b" arm of the M-Z interferometer
-la = lb + 0.5*c/((500e9)*neff_res);	%Length of "a" arm of the M-Z interferometer
+la = lb + 0.5*c/((FSR)*neff_res);	%Length of "a" arm of the M-Z interferometer
 ta = get_lossless_t(ra);			%Transmission coupling strength of first 50/50 splitter of the M-Z interferometer (use get_lossless_t(ra) for lossless coupler)
 tb = get_lossless_t(rb);			%Transmission coupling strength of second 50/50 splitter of the M-Z interferometer (use get_lossless_t(rb) for lossless coupler)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

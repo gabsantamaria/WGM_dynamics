@@ -2,8 +2,6 @@ close all; pause(0.1); c = 299792458;
 
 lambda0 = 1550e-9; fspan = 2e12; 
 %--------DESIGN PARAMETERS--------------------
-%neff_res = 1.8305; 			%effective index of resonator
-%neff_coup = 1.8305; 		%effective index of coupler waveguides
 neff_res = 1.8607; 			%effective index of resonator
 neff_coup = 1.8607; 		%effective index of coupler waveguides
 loss_res = 2.7; 			%loss of resonator (dB/m)
@@ -32,7 +30,7 @@ r0_ = -(att_roundtrip^1.02);		%Input waveguide - resonator coupling strength (ma
 r2_ = 0+1*(att_roundtrip.^50);		%Resonator - coupler coupling strength
 ra = sqrt(0.5);						%Coupling strength of first 50/50 splitter of the M-Z interferometer
 rb = -sqrt(0.5); 					%Coupling strength of second 50/50 splitter of the M-Z interferometer
-lb = 10e-6; 						%Length of "b" arm of the M-Z interferometer
+lb = 13e-6; 						%Length of "b" arm of the M-Z interferometer
 la = lb + 0.5*c/((FSR)*neff_res);	%Length of "a" arm of the M-Z interferometer
 ta = get_lossless_t(ra);			%Transmission coupling strength of first 50/50 splitter of the M-Z interferometer (use get_lossless_t(ra) for lossless coupler)
 tb = get_lossless_t(rb);			%Transmission coupling strength of second 50/50 splitter of the M-Z interferometer (use get_lossless_t(rb) for lossless coupler)
