@@ -7,21 +7,30 @@ lambda0 = 1550e-9; fspan = 2e12;
 neff_res = 1.8607; 			%effective index of resonator
 neff_coup = 1.8607; 		%effective index of coupler waveguides
 loss_res = 2.7; 			%loss of resonator (dB/m)
-loss_coup = 2.7; 			%loss of coupler waveguides (dB/m)
+%loss_coup = 2.7; 			%[DEPRECATED] %loss of coupler waveguides (dB/m)
+loss_coup_L3 = 2.7; 			%loss of coupler waveguide section L3  (dB/m)
+loss_coup_L4 = 2.7; 			%loss of coupler waveguide section L4  (dB/m)
+loss_int_La  = 2.7; 			%loss of interferometer waveguide section La  (dB/m)
+loss_int_Lb  = 2.7; 			%loss of interferometer waveguide section Lb  (dB/m)
 R0 = 52.13160512687181e-6;	%radius of resonator
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Finding resonance frequency, asigning frequency vector and finding complex betas
 [BET_res_, f, Qi, f0, mp, lda0, FSR]  = get_beta(lambda0, fspan, neff_res, loss_res, R0);
-bet_pp_coup = loss_coup/(20*log10(exp(1))); BET_coup_ = (2*pi*f/c)*neff_coup -1i*bet_pp_coup;
+%bet_pp_coup = loss_coup/(20*log10(exp(1))); BET_coup_ = (2*pi*f/c)*neff_coup -1i*bet_pp_coup; %[DEPRECATED]
 
+bet_pp_coup_L3 = loss_coup_L3/(20*log10(exp(1))); BET_coup_L3_ = (2*pi*f/c)*neff_coup -1i*bet_pp_coup_L3;
+bet_pp_coup_L4 = loss_coup_L4/(20*log10(exp(1))); BET_coup_L4_ = (2*pi*f/c)*neff_coup -1i*bet_pp_coup_L4;
+
+bet_pp_int_La  = loss_int_La/(20*log10(exp(1)));  BET_int_La_  = (2*pi*f/c)*neff_coup -1i*bet_pp_int_La;
+bet_pp_int_Lb  = loss_int_Lb/(20*log10(exp(1)));  BET_int_Lb_  = (2*pi*f/c)*neff_coup -1i*bet_pp_int_Lb;
 
 
 %--------DESIGN PARAMETERS--------------------
 L1_ = 2*pi*R0/2; 	%L1 in my drawing
 L2_ = 2*pi*R0/2; 	%L2 in my drawing 
-L3_ = 10e-6; 	 	%L3 in my drawing
-L4_ = 10e-6;	 	%L4 in my drawing
+L3_ = 14e-6; 	 	%L3 in my drawing
+L4_ = 14e-6;	 	%L4 in my drawing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %att_roundtrip is the single-roundtrip field attenuation factor (1 means no absorptio/radiation loss)
@@ -40,10 +49,10 @@ tb = get_lossless_t(rb);			%Transmission coupling strength of second 50/50 split
 
 
 %Building M-Z asymmetric interferometer
-[r4_, r5_, t4_, t5_] = get_interferometer(ra, ta, rb, tb, la, lb, BET_coup_);
+[r4_, r5_, t4_, t5_] = get_interferometer(ra, ta, rb, tb, la, lb, BET_int_La_, BET_int_Lb_);
 
 %Solving all modes symbolically and then numerically
-[a1234_num, b012345_num] = solveall_simpler(r0_, r2_, r4_, r5_, t4_, t5_, L1_, L2_, L3_, L4_, BET_res_, BET_coup_);
+[a1234_num, b012345_num] = solveall_simpler(r0_, r2_, r4_, r5_, t4_, t5_, L1_, L2_, L3_, L4_, BET_res_, BET_coup_L3_, BET_coup_L4_);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
